@@ -35,6 +35,7 @@ import org.jboss.aerogear.unifiedpush.message.UnifiedPushMessage;
 import org.jboss.aerogear.unifiedpush.message.apns.APNs;
 import org.jboss.aerogear.unifiedpush.message.cache.AbstractServiceCache.ServiceConstructor;
 import org.jboss.aerogear.unifiedpush.message.cache.ApnsServiceCache;
+import org.jboss.aerogear.unifiedpush.message.configuration.ProxyConfiguration;
 import org.jboss.aerogear.unifiedpush.message.exception.PushNetworkUnreachableException;
 import org.jboss.aerogear.unifiedpush.message.exception.SenderResourceNotAvailableException;
 import org.jboss.aerogear.unifiedpush.service.ClientInstallationService;
@@ -118,17 +119,17 @@ public class APNsPushNotificationSender implements PushNotificationSender {
         if(apns.getLocalizedTitleArguments() != null) {
             builder .localizedArguments(apns.getLocalizedTitleArguments()); //iOS8 : Localized Title Arguments;
         }
-		
+
         //this kind of check should belong in java-apns
         if(apns.getLocalizedKey() != null) {
             builder.localizedKey(apns.getLocalizedKey()); // Localized Key;
-        }		
+        }
 
         //this kind of check should belong in java-apns
         if(apns.getLocalizedArguments() != null) {
             builder.localizedArguments(apns.getLocalizedArguments()); // Localized Arguments;
-        }		
-		
+        }
+
        // apply the 'content-available:1' value:
         if (apns.isContentAvailable()) {
             // content-available is for 'silent' notifications and Newsstand
@@ -282,6 +283,10 @@ public class APNsPushNotificationSender implements PushNotificationSender {
 
             configureDestinations(iOSVariant, builder);
 
+            if(ProxyConfiguration.hasSocks()){
+                logger.debug("configuring with socks proxy");
+                builder.withProxy(ProxyConfiguration.socks());
+            }
 
             // create the service
             return builder.build();
