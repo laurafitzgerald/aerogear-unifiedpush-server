@@ -26,7 +26,12 @@ public class Ping {
         Socket socket = null;
         boolean reachable;
         try {
-            socket = new Socket();
+
+            if (ProxyConfiguration.hasSocks()) {
+                socket = new Socket(ProxyConfiguration.socks());
+            } else {
+                socket = new Socket();
+            }
             socket.connect(new InetSocketAddress(host, port), 2000);
             reachable = true;
         } catch (IOException e) {
