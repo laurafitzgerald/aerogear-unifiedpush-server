@@ -16,6 +16,8 @@
  */
 package org.jboss.aerogear.unifiedpush.service.impl.health;
 
+import org.jboss.aerogear.unifiedpush.service.proxy.ProxyConfiguration;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
